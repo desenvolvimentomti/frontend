@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todas as Startups</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-area">
+                <h1>Startups - MTI</h1>
+            </div>
+            
+            <nav class="main-nav">
+                <a href="/">🔍 Busca</a>
+                <a href="/todas" class="active">📋 Ver Todas</a>
+                <a href="/logout" class="btn-logout">Sair</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="page-header">
+            <h2>Catálogo Completo</h2>
+            <p>Listando {{ empresas|length }} empresas cadastradas.</p>
+        </div>
+
+        {% if error %}
+        <div class="alert-box">{{ error }}</div>
+        {% endif %}
+
+        <div class="card-grid">
+            {% for empresa in empresas %}
+            <div class="card">
+                <div class="card-header">
+                    <h2>{{ empresa.nome_da_empresa }}</h2>
+                    <span class="tag">{{ empresa.setor_principal }}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Cidade:</strong> {{ empresa.endereco }}</p>
+                    <p><strong>Fase:</strong> {{ empresa.fase_da_startup }}</p>
+                    <p class="desc"><strong>Solução:</strong> {{ empresa.solucao[:100] }}...</p>
+                </div>
+                <div class="card-footer">
+                    {% if empresa.site and empresa.site != 'nan' %}
+                        <a href="{{ empresa.site }}" target="_blank" class="btn-visit">Visitar Site</a>
+                    {% else %}
+                        <span class="btn-disabled">Sem Site</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    </main>
+
+</body>
+</html>

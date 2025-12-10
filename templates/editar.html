@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Mídias</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: #2563eb;">rocket_launch</span>
+                <h1>Startup Radar</h1>
+            </div>
+            <nav class="main-nav">
+                <a href="/empresa/{{ empresa.id }}" class="btn-back" style="display: flex; align-items: center;">
+                    <span class="material-symbols-outlined">arrow_back</span> Voltar ao Dashboard
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="page-header">
+            <div class="header-title">
+                <h2>Gerenciar Mídias e Contato</h2>
+                <p>Editando: <strong>{{ empresa.nome_da_empresa }}</strong></p>
+            </div>
+        </div>
+
+        <div class="edit-grid">
+            
+            <div class="card edit-card">
+                <div class="card-header">
+                    <h3><span class="material-symbols-outlined">description</span> Pitch Deck (PDF/PPT)</h3>
+                </div>
+                <div class="card-body">
+                    
+                    {% if empresa.link_apresentacao %}
+                    <div style="background: #f0f9ff; padding: 10px; border-radius: 6px; border: 1px solid #b9e6fe; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 5px; overflow: hidden;">
+                            <span class="material-symbols-outlined" style="color: #0284c7;">attach_file</span>
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-size: 0.85rem; color: #0369a1; font-weight: 600;">Arquivo Anexado</span>
+                                <a href="{{ empresa.link_apresentacao }}" target="_blank" style="font-size: 0.75rem; color: #0284c7; text-decoration: underline;">Visualizar atual</a>
+                            </div>
+                        </div>
+                        <a href="/empresa/{{ empresa.id }}/delete_apresentacao" 
+                           onclick="return confirm('Tem certeza que deseja remover o arquivo atual?')"
+                           style="color: #ef4444; text-decoration: none; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 3px; padding: 4px 8px; border: 1px solid #fecaca; border-radius: 4px; background: #fff;">
+                           <span class="material-symbols-outlined" style="font-size: 1rem !important; margin: 0;">delete</span> Remover
+                        </a>
+                    </div>
+                    {% endif %}
+
+                    <p class="help-text">Selecione um arquivo .pdf, .ppt ou .pptx para enviar.</p>
+                    
+                    <form action="/empresa/{{ empresa.id }}/upload_apresentacao" method="post" enctype="multipart/form-data">
+                        <div class="input-group">
+                            <input type="file" name="arquivo" accept=".pdf, .ppt, .pptx" class="file-input-custom" required>
+                        </div>
+                        <div class="btn-row">
+                            <button type="submit" class="btn-save">
+                                <span class="material-symbols-outlined" style="font-size: 1.1rem !important; margin-right: 5px;">cloud_upload</span> 
+                                Enviar Arquivo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card edit-card">
+                <div class="card-header">
+                    <h3><span class="material-symbols-outlined">movie</span> Vídeo Pitch</h3>
+                </div>
+                <div class="card-body">
+                    <p class="help-text">Link do YouTube, Vimeo ou Loom.</p>
+                    
+                    <form action="/empresa/{{ empresa.id }}/update_video" method="post" onsubmit="return confirmarAlteracao(this)">
+                        <div class="input-group">
+                            <input type="text" name="link_video" 
+                                   value="{{ empresa.link_video if empresa.link_video else '' }}" 
+                                   placeholder="https://youtube.com/...">
+                            <small style="color: #ef4444; font-size: 0.8rem;">* Deixe vazio para remover o vídeo.</small>
+                        </div>
+                        <div class="btn-row">
+                            <button type="submit" class="btn-save">Salvar Alteração</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card edit-card">
+                <div class="card-header">
+                    <h3><span class="material-symbols-outlined">smartphone</span> Telefone de Contato</h3>
+                </div>
+                <div class="card-body">
+                    <p class="help-text">Digite apenas os números (DDD + Número).</p>
+                    
+                    <form action="/empresa/{{ empresa.id }}/update_telefone" method="post" onsubmit="return confirmarAlteracao(this)">
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                id="telefoneInput"
+                                name="telefone_contato" 
+                                value="{{ empresa.telefone_contato if empresa.telefone_contato else '' }}" 
+                                placeholder="(99) 99999-9999"
+                                maxlength="15"
+                            >
+                            <small style="color: #ef4444; font-size: 0.8rem;">* Deixe vazio para remover o telefone.</small>
+                        </div>
+                        <div class="btn-row">
+                            <button type="submit" class="btn-save">Salvar Alteração</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // --- 1. MÁSCARA DE TELEFONE INTELIGENTE ---
+        const telInput = document.getElementById('telefoneInput');
+        if (telInput) {
+            telInput.addEventListener('input', function (e) {
+                // Remove tudo o que não é número
+                let value = e.target.value.replace(/\D/g, "");
+                
+                // Limita tamanho para não quebrar layout
+                if (value.length > 11) value = value.slice(0, 11);
+
+                // Aplica formatação progressiva
+                if (value.length > 10) {
+                    // (11) 91234-5678
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+                } else if (value.length > 6) {
+                    // (11) 91234-5...
+                    value = value.replace(/^(\d{2})(\d{4,5})(\d{0,4})/, "($1) $2-$3");
+                } else if (value.length > 2) {
+                    // (11) 9...
+                    value = value.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+                } else {
+                    // 11...
+                    value = value.replace(/^(\d*)/, "$1");
+                }
+                
+                e.target.value = value;
+            });
+        }
+
+        // --- 2. CONFIRMAÇÃO DE SEGURANÇA ---
+        function confirmarAlteracao(form) {
+            const input = form.querySelector('input[type="text"]');
+            
+            // Se o formulário tiver input de texto (Video/Telefone)
+            if (input) {
+                const valor = input.value.trim();
+                if (valor === "") {
+                    return confirm("⚠️ ATENÇÃO: O campo está vazio!\n\nAo confirmar, o dado atual será EXCLUÍDO permanentemente.\n\nDeseja continuar?");
+                }
+            }
+            // Confirmação padrão
+            return confirm("Deseja salvar as alterações?");
+        }
+    </script>
+
+</body>
+</html>

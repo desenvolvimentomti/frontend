@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ empresa.nome_da_empresa }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: #2563eb;">rocket_launch</span>
+                <h1>Startups - MTI</h1>
+            </div>
+            <nav class="main-nav">
+                <a href="/" class="btn-back" style="display: flex; align-items: center;">
+                    <span class="material-symbols-outlined">arrow_back</span> Voltar
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        {% if error %}
+            <div class="alert-box error">{{ error }}</div>
+        {% elif empresa %}
+
+        <div class="dashboard-header">
+            <div class="dh-main">
+                <h1>{{ empresa.nome_da_empresa }}</h1>
+                <div class="dh-tags">
+                    <span class="tag-lg">{{ empresa.setor_principal }}</span>
+                    {% if empresa.setor_secundario and empresa.setor_secundario != 'nan' %}
+                    <span class="tag-lg secondary">{{ empresa.setor_secundario }}</span>
+                    {% endif %}
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <a href="/empresa/{{ empresa.id }}/editar" class="btn-edit-action" style="display: flex; align-items: center; width: fit-content;">
+                        <span class="material-symbols-outlined">edit</span> Gerenciar Mídias e Contato
+                    </a>
+                </div>
+            </div>
+            
+            <div class="dh-meta">
+                <p><strong>Fundação:</strong> {{ empresa.ano_de_fundacao }}</p>
+                <p><strong>CNPJ:</strong> {{ empresa.cnpj }}</p>
+                <p style="display: flex; align-items: center; justify-content: flex-end;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem !important; color:#94a3b8;">location_on</span> {{ empresa.endereco }}
+                </p>
+            </div>
+        </div>
+
+        <div class="details-grid">
+            
+            <div class="col-main">
+                <section class="detail-card">
+                    <h3><span class="material-symbols-outlined">lightbulb</span> A Solução</h3>
+                    <p class="text-content">{{ empresa.solucao }}</p>
+                </section>
+
+                <section class="detail-card">
+                    <h3><span class="material-symbols-outlined">payments</span> Modelo & Faturamento</h3>
+                    <div class="info-list">
+                        <div class="info-item"><span class="label">Modelo:</span><span class="value">{{ empresa.modelo_de_negocio }}</span></div>
+                        <div class="info-item"><span class="label">Faturamento:</span><span class="value">{{ empresa.faturamento }}</span></div>
+                        <div class="info-item"><span class="label">Público Alvo:</span><span class="value">{{ empresa.publico_alvo }}</span></div>
+                    </div>
+                </section>
+
+                <section class="detail-card">
+                    <h3><span class="material-symbols-outlined">smart_display</span> Mídia</h3>
+                    <div class="media-links">
+                        {% if empresa.link_apresentacao %}
+                            <a href="{{ empresa.link_apresentacao }}" target="_blank" class="media-btn pdf" style="display:flex; align-items:center; justify-content:center;">
+                                <span class="material-symbols-outlined">description</span> Ver Pitch Deck
+                            </a>
+                        {% else %}
+                            <span class="media-missing">Sem Apresentação</span>
+                        {% endif %}
+
+                        {% if empresa.link_video %}
+                            <a href="{{ empresa.link_video }}" target="_blank" class="media-btn video" style="display:flex; align-items:center; justify-content:center;">
+                                <span class="material-symbols-outlined">play_circle</span> Assistir Vídeo
+                            </a>
+                        {% else %}
+                            <span class="media-missing">Sem Vídeo</span>
+                        {% endif %}
+                    </div>
+                </section>
+            </div>
+
+            <div class="col-side">
+                <section class="detail-card highlight-card">
+                    <h3><span class="material-symbols-outlined">rocket</span> Momento</h3>
+                    <div class="stat-row"><span>Fase</span><strong>{{ empresa.fase_da_startup }}</strong></div>
+                    <div class="stat-row"><span>Colaboradores</span><strong>{{ empresa.colaboradores }}</strong></div>
+                    <div class="stat-row"><span>Investimento</span><strong>{{ empresa.recebeu_investimento }}</strong></div>
+                </section>
+
+                <section class="detail-card">
+                    <h3><span class="material-symbols-outlined">contact_phone</span> Contatos</h3>
+                    <ul class="contact-list">
+                        {% if empresa.site and empresa.site != 'nan' %}
+                        <li><a href="{{ empresa.site }}" target="_blank" style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important;">language</span> Site Oficial</a></li>
+                        {% endif %}
+                        
+                        {% if empresa.rede_social and empresa.rede_social != 'nan' %}
+                        <li><a href="{{ empresa.rede_social }}" target="_blank" style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important;">link</span> Rede Social</a></li>
+                        {% endif %}
+
+                        {% if empresa.email and empresa.email != 'nan' %}
+                        <li style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important; color:#94a3b8; margin-right:5px;">mail</span> {{ empresa.email }}</li>
+                        {% endif %}
+
+                        {% if empresa.telefone_contato %}
+                        <li style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important; color:#94a3b8; margin-right:5px;">call</span> {{ empresa.telefone_contato }}</li>
+                        {% endif %}
+                    </ul>
+                </section>
+            </div>
+        </div>
+
+        {% else %}
+            <div class="empty-state">
+                <h3>Empresa não encontrada.</h3>
+                <a href="/" class="btn-back">Voltar</a>
+            </div>
+        {% endif %}
+
+    </main>
+
+    <footer>
+        <p>Sistema Interno @mti.com &copy; 2025</p>
+    </footer>
+
+</body>
+</html>

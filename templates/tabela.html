@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Empresas</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: #2563eb;">rocket_launch</span>
+                <h1>Startups - MTI</h1>
+            </div>
+            <nav class="main-nav">
+                <a href="/" style="display: flex; align-items: center; color: #64748b; text-decoration: none; padding: 8px 12px;">
+                    <span class="material-symbols-outlined">search</span> Busca
+                </a>
+                <a href="/lista" class="active-link" style="display: flex; align-items: center;">
+                    <span class="material-symbols-outlined">table_rows</span> Lista Completa
+                </a>
+                <a href="/logout" class="btn-logout" style="display: flex; align-items: center;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem !important; margin: 0;">logout</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container-fluid">
+        
+        <div class="page-header">
+            <div class="header-title">
+                <h2>Visão em Lista</h2>
+                <p>Total de <strong id="totalCount">{{ empresas|length }}</strong> registros.</p>
+            </div>
+            
+            <div class="table-filter-box">
+                <span class="material-symbols-outlined filter-icon">filter_alt</span>
+                <input 
+                    type="text" 
+                    id="filtroTabela" 
+                    onkeyup="filtrarTabela()" 
+                    placeholder="Filtrar por nome..."
+                >
+            </div>
+        </div>
+
+        {% if error %} <div class="alert-box error">{{ error }}</div> {% endif %}
+
+        <div class="table-container">
+            <table id="tabelaEmpresas">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Empresa <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
+                        <th onclick="sortTable(1)">Setor <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
+                        <th onclick="sortTable(2)">Fase <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
+                        <th onclick="sortTable(3)">Local <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
+                        <th onclick="sortTable(4)">Responsável <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for emp in empresas %}
+                    <tr class="linha-empresa">
+                        <td class="nome-coluna" style="font-weight: 600; color: #1e293b;">{{ emp.nome_da_empresa }}</td>
+                        <td><span class="tag-sm">{{ emp.setor_principal }}</span></td>
+                        <td>{{ emp.fase_da_startup }}</td>
+                        <td>{{ emp.endereco }}</td>
+                        <td>{{ emp.cadastrado_por }}</td>
+                        <td class="actions-cell">
+                            <a href="/empresa/{{ emp.id }}" class="btn-icon" title="Ver Dashboard">
+                                <span class="material-symbols-outlined" style="color: #2563eb;">dashboard</span>
+                            </a>
+                            
+                            {% if emp.site and emp.site != 'nan' %}
+                            <a href="{{ emp.site }}" target="_blank" class="btn-icon" title="Visitar Site">
+                                <span class="material-symbols-outlined" style="color: #10b981;">language</span>
+                            </a>
+                            {% else %}
+                            <span class="btn-icon disabled">
+                                <span class="material-symbols-outlined">block</span>
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div id="msgSemResultado" style="display: none; text-align: center; padding: 20px; color: #64748b;">
+                Nenhuma empresa encontrada com esse nome.
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // FUNÇÃO DE FILTRO INSTANTÂNEO
+        function filtrarTabela() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("filtroTabela");
+            filter = input.value.toUpperCase();
+            table = document.getElementById("tabelaEmpresas");
+            tr = table.getElementsByTagName("tr");
+            var visibleCount = 0;
+
+            // Começa do 1 para pular o cabeçalho (thead)
+            for (i = 1; i < tr.length; i++) {
+                // Pega a primeira coluna (Nome da Empresa)
+                td = tr[i].getElementsByTagName("td")[0];
+                if (td) {
+                    txtValue = td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                        visibleCount++;
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }       
+            }
+
+            // Mostra mensagem se tudo estiver escondido
+            var msg = document.getElementById("msgSemResultado");
+            if (visibleCount === 0) {
+                msg.style.display = "block";
+                table.style.display = "none"; // Esconde cabeçalho se vazio
+            } else {
+                msg.style.display = "none";
+                table.style.display = "";
+            }
+        }
+
+        // FUNÇÃO DE ORDENAÇÃO (MANTIDA)
+        function sortTable(n) {
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+            table = document.getElementById("tabelaEmpresas");
+            switching = true;
+            dir = "asc"; 
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[n];
+                    y = rows[i + 1].getElementsByTagName("TD")[n];
+                    if (dir == "asc") {
+                        if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) { shouldSwitch = true; break; }
+                    } else if (dir == "desc") {
+                        if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) { shouldSwitch = true; break; }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount ++; 
+                } else {
+                    if (switchcount == 0 && dir == "asc") { dir = "desc"; switching = true; }
+                }
+            }
+        }
+    </script>
+
+</body>
+</html>

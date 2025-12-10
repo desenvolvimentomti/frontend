@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Radar - Busca Inteligente</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: #2563eb;">rocket_launch</span>
+                <h1>Startup Radar</h1>
+            </div>
+            
+            <nav class="main-nav">
+                <a href="/" style="display: flex; align-items: center; font-weight: 700; color: #2563eb; background-color: #eff6ff; padding: 8px 12px; border-radius: 6px; text-decoration: none;">
+                    <span class="material-symbols-outlined">search</span> Busca
+                </a>
+                
+                <a href="/lista" style="display: flex; align-items: center; color: #64748b; text-decoration: none; font-weight: 500; padding: 8px 12px;">
+                    <span class="material-symbols-outlined">table_rows</span> Lista Completa
+                </a>
+                
+                <span style="color: #cbd5e1; margin: 0 5px;">|</span>
+                
+                <a href="/logout" class="btn-logout" style="display: flex; align-items: center;">
+                    <span class="material-symbols-outlined" style="font-size: 1rem !important; margin: 0;">logout</span>
+                    <span style="margin-left: 5px;">Sair</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <div class="{% if query or fase %}compact-header{% else %}hero-section{% endif %}">
+            
+            {% if not query and not fase %}
+            <div class="hero-text">
+                <h2>Encontre a startup certa</h2>
+                <p>Pesquise no nosso catálogo utilizando inteligência artificial.</p>
+            </div>
+            {% endif %}
+            
+            <div class="search-container">
+                <form action="/" method="get" class="search-form">
+                    
+                    <div class="select-wrapper">
+                        <span class="material-symbols-outlined select-icon">filter_list</span>
+                        <select name="fase" class="search-select">
+                            <option value="">Todas as Fases</option>
+                            <option value="Ideação" {% if fase == 'Ideação' %}selected{% endif %}>Ideação</option>
+                            <option value="Operação" {% if fase == 'Operação' %}selected{% endif %}>Operação</option>
+                            <option value="Tração" {% if fase == 'Tração' %}selected{% endif %}>Tração</option>
+                            <option value="Escala" {% if fase == 'Escala' %}selected{% endif %}>Escala</option>
+                        </select>
+                    </div>
+
+                    <input 
+                        type="text" 
+                        name="q" 
+                        placeholder="Ex: fintechs de crédito, agrotech..." 
+                        value="{{ query if query else '' }}"
+                        class="search-input"
+                        {% if not query %}autofocus{% endif %}
+                    >
+                    
+                    <button type="submit" class="search-btn" style="display: flex; align-items: center; justify-content: center;">
+                        <span class="material-symbols-outlined" style="margin: 0;">search</span>
+                    </button>
+                    
+                    {% if query or fase %}
+                    <a href="/" class="btn-clear" title="Limpar busca">
+                        <span class="material-symbols-outlined">close</span>
+                    </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+
+        {% if error %}
+        <div class="alert-box error">{{ error }}</div>
+        {% endif %}
+
+        {% if query or fase %}
+        
+        <div class="results-header">
+            <h3>Resultados encontrados {% if query %}para "<em>{{ query }}</em>"{% endif %}</h3>
+            <span>{{ empresas|length }} encontrados</span>
+        </div>
+
+        <div class="results-scroll-container">
+            <div class="card-grid">
+                {% for empresa in empresas %}
+                <div class="card">
+                    <div class="card-header">
+                        <h2 title="{{ empresa.nome_da_empresa }}">{{ empresa.nome_da_empresa }}</h2>
+                        <span class="tag">{{ empresa.setor_principal }}</span>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="info-row" style="display: flex; align-items: center;">
+                            <span class="material-symbols-outlined" style="font-size: 1rem !important; color: #94a3b8;">location_on</span>
+                            <strong>Local:</strong> <span style="margin-left: 5px;">{{ empresa.endereco }}</span>
+                        </div>
+                        <div class="info-row" style="display: flex; align-items: center;">
+                            <span class="material-symbols-outlined" style="font-size: 1rem !important; color: #94a3b8;">trending_up</span>
+                            <strong>Fase:</strong> <span style="margin-left: 5px;">{{ empresa.fase_da_startup }}</span>
+                        </div>
+                        <div class="desc-box">
+                            <div style="display: flex; align-items: center; gap: 5px; color: #64748b; font-weight: 600; font-size: 0.85rem;">
+                                <span class="material-symbols-outlined" style="font-size: 1rem !important;">lightbulb</span> Solução:
+                            </div>
+                            <p>{{ empresa.solucao[:110] }}...</p>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="/empresa/{{ empresa.id }}" class="btn-details" style="display: flex; align-items: center; justify-content: center;">
+                            <span class="material-symbols-outlined">dashboard</span> Ver Dashboard
+                        </a>
+
+                        {% if empresa.site and empresa.site != 'nan' and empresa.site != 'None' %}
+                            <a href="{{ empresa.site }}" target="_blank" class="btn-visit" style="display: flex; align-items: center; justify-content: center;">
+                                <span class="material-symbols-outlined" style="margin: 0;">language</span>
+                            </a>
+                        {% else %}
+                            <button class="btn-disabled" disabled>
+                                <span class="material-symbols-outlined" style="margin: 0; font-size: 1rem !important;">block</span>
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                    <div class="empty-state" style="grid-column: 1/-1; width: 100%;">
+                        <h3>Nenhum resultado encontrado.</h3>
+                        <p>Tente refinar sua busca, mudar a fase ou <a href="/lista">veja a lista completa</a>.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %} </main>
+
+    <footer>
+        <p>Sistema Interno @mti.com &copy; 2025</p>
+    </footer>
+
+</body>
+</html>

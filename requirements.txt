@@ -2,25 +2,8 @@
 fastapi
 uvicorn[standard]
 
-# --- PostgreSQL ---
-sqlalchemy
-psycopg2-binary
-
-# --- Autenticação ---
-python-jose[cryptography]
-passlib[bcrypt]
-
 # --- Frontend ---
 jinja2
 requests
 python-multipart
-aiofiles
-
-# --- Busca Semântica ---
-pandas
-nltk
-scikit-learn
-numpy
-
-# --- env ---
 python-dotenv

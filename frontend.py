@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory="templates")
 # 2. Pega a URL do arquivo .env (Se não achar, usa o localhost como padrão de segurança)
 BACKEND_URL = os.getenv("BACKEND_URL")
 
-# ==========================================
+# ========================================= =
 # HELPER FUNCTIONS
 # ==========================================
 

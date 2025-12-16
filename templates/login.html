@@ -11,17 +11,20 @@
 <body>
 
     <div class="auth-wrapper">
-        
+
         <div class="auth-form-side">
             <div class="auth-content">
                 <div class="brand-logo">
-                    <span class="material-symbols-outlined logo-icon"></span>
-                    <span>Minas Tecnologia e Inovação</span>
+                    <span class="material-symbols-outlined logo-icon" style="color: var(--accent);">rocket_launch</span>
+                    <div class="brand-text">
+                        <span class="brand-name" style="color: var(--primary);">MTI</span>
+                        <span class="brand-subtitle">Startup Radar</span>
+                    </div>
                 </div>
 
                 <div class="auth-header">
                     <h1>Bem-vindo de volta</h1>
-                    <p>Insira suas credenciais para acessar o painel.</p>
+                    <p>Acesse sua conta para gerenciar o ecossistema de startups</p>
                 </div>
 
                 {% if error %}
@@ -33,13 +36,13 @@
 
                 <form action="/login" method="post">
                     <div class="input-group-modern">
-                        <label for="email">E-mail Corporativo</label>
+                        <label for="email">E-mail</label>
                         <div class="input-wrapper">
                             <span class="material-symbols-outlined input-icon">mail</span>
-                            <input type="email" id="email" name="email" placeholder="nome@mti.com" required>
+                            <input type="email" id="email" name="email" placeholder="seu@email.com" required autofocus>
                         </div>
                     </div>
-                    
+
                     <div class="input-group-modern">
                         <label for="password">Senha</label>
                         <div class="input-wrapper">
@@ -49,23 +52,52 @@
                     </div>
 
                     <button type="submit" class="btn-auth">
-                        Acessar Sistema <span class="material-symbols-outlined">arrow_forward</span>
+                        Acessar Sistema
+                        <span class="material-symbols-outlined">arrow_forward</span>
                     </button>
                 </form>
 
                 <div class="auth-footer">
-                    <p>Ainda não tem acesso? <a href="/register">Solicitar conta</a></p>
+                    <p>Ainda não tem acesso? <a href="/register">Criar conta</a></p>
                 </div>
             </div>
         </div>
 
         <div class="auth-visual-side">
             <div class="visual-content">
+                <div class="visual-icon">
+                    <span class="material-symbols-outlined">insights</span>
+                </div>
                 <h2>Inteligência de Mercado</h2>
-                <p>Acesse dados estratégicos.</p>
+                <p>Dados estratégicos e análises do ecossistema de inovação de Minas Gerais</p>
+
+                <div class="visual-stats">
+                    <div class="stat-item">
+                        <span class="material-symbols-outlined">rocket_launch</span>
+                        <div>
+                            <strong>+200</strong>
+                            <span>Startups</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="material-symbols-outlined">category</span>
+                        <div>
+                            <strong>+40</strong>
+                            <span>Setores</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="material-symbols-outlined">search</span>
+                        <div>
+                            <strong>IA</strong>
+                            <span>Busca Semântica</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="circle c1"></div>
             <div class="circle c2"></div>
+            <div class="circle c3"></div>
         </div>
 
     </div>

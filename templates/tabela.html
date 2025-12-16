@@ -12,18 +12,24 @@
     <header>
         <div class="container header-content">
             <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
-                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: #2563eb;">rocket_launch</span>
-                <h1>Startups - MTI</h1>
+                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: var(--accent);">rocket_launch</span>
+                <h1 style="color: var(--primary);">Startup Radar</h1>
             </div>
             <nav class="main-nav">
-                <a href="/" style="display: flex; align-items: center; color: #64748b; text-decoration: none; padding: 8px 12px;">
+                <a href="/" style="display: flex; align-items: center; gap: 4px; color: var(--text-light); text-decoration: none; padding: 8px 12px; font-weight: 500; transition: color 0.2s;">
                     <span class="material-symbols-outlined">search</span> Busca
                 </a>
-                <a href="/lista" class="active-link" style="display: flex; align-items: center;">
+                <a href="/lista" class="active-link" style="display: flex; align-items: center; gap: 4px;">
                     <span class="material-symbols-outlined">table_rows</span> Lista Completa
                 </a>
-                <a href="/logout" class="btn-logout" style="display: flex; align-items: center;">
+
+                <a href="/admin/criar-startup" style="display: flex; align-items: center; gap: 4px; background-color: var(--accent); color: white; text-decoration: none; font-weight: 600; padding: 8px 16px; border-radius: 8px; transition: all 0.2s;">
+                    <span class="material-symbols-outlined">add_circle</span> Nova Startup
+                </a>
+
+                <a href="/logout" class="btn-logout" style="display: flex; align-items: center; gap: 4px;">
                     <span class="material-symbols-outlined" style="font-size: 1rem !important; margin: 0;">logout</span>
+                    Sair
                 </a>
             </nav>
         </div>
@@ -54,30 +60,45 @@
             <table id="tabelaEmpresas">
                 <thead>
                     <tr>
-                        <th onclick="sortTable(0)">Empresa <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
-                        <th onclick="sortTable(1)">Setor <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
-                        <th onclick="sortTable(2)">Fase <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
-                        <th onclick="sortTable(3)">Local <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
-                        <th onclick="sortTable(4)">Responsável <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right;">unfold_more</span></th>
-                        <th>Ações</th>
+                        <th onclick="sortTable(0)" style="width: 20%;">
+                            Empresa
+                            <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right; opacity: 0.7;">unfold_more</span>
+                        </th>
+                        <th onclick="sortTable(1)" style="width: 15%;">
+                            Setor
+                            <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right; opacity: 0.7;">unfold_more</span>
+                        </th>
+                        <th onclick="sortTable(2)" style="width: 12%;">
+                            Fase
+                            <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right; opacity: 0.7;">unfold_more</span>
+                        </th>
+                        <th onclick="sortTable(3)" style="width: 30%;">
+                            Localização
+                            <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right; opacity: 0.7;">unfold_more</span>
+                        </th>
+                        <th onclick="sortTable(4)" style="width: 15%;">
+                            Responsável
+                            <span class="material-symbols-outlined" style="font-size: 1rem !important; float:right; opacity: 0.7;">unfold_more</span>
+                        </th>
+                        <th style="width: 8%; text-align: right;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for emp in empresas %}
                     <tr class="linha-empresa">
-                        <td class="nome-coluna" style="font-weight: 600; color: #1e293b;">{{ emp.nome_da_empresa }}</td>
+                        <td class="nome-coluna">{{ emp.nome_da_empresa }}</td>
                         <td><span class="tag-sm">{{ emp.setor_principal }}</span></td>
-                        <td>{{ emp.fase_da_startup }}</td>
-                        <td>{{ emp.endereco }}</td>
-                        <td>{{ emp.cadastrado_por }}</td>
+                        <td style="font-weight: 600;">{{ emp.fase_da_startup }}</td>
+                        <td style="color: var(--text-light); font-size: 0.95rem;">{{ emp.endereco }}</td>
+                        <td style="color: var(--text-light);">{{ emp.cadastrado_por if emp.cadastrado_por else '—' }}</td>
                         <td class="actions-cell">
                             <a href="/empresa/{{ emp.id }}" class="btn-icon" title="Ver Dashboard">
-                                <span class="material-symbols-outlined" style="color: #2563eb;">dashboard</span>
+                                <span class="material-symbols-outlined">dashboard</span>
                             </a>
-                            
+
                             {% if emp.site and emp.site != 'nan' %}
-                            <a href="{{ emp.site }}" target="_blank" class="btn-icon" title="Visitar Site">
-                                <span class="material-symbols-outlined" style="color: #10b981;">language</span>
+                            <a href="{{ emp.site }}" target="_blank" class="btn-icon" title="Visitar Site" style="background: linear-gradient(135deg, var(--success) 0%, #059669 100%);">
+                                <span class="material-symbols-outlined">language</span>
                             </a>
                             {% else %}
                             <span class="btn-icon disabled">

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erro - MTI</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+    <div class="error-page-wrapper">
+        <div class="error-content">
+            <div class="error-icon-container">
+                <div class="error-icon-bg" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);"></div>
+                <span class="material-symbols-outlined error-icon" style="color: #f59e0b;">error</span>
+            </div>
+
+            <div class="error-text">
+                <h1>Ops! Algo deu errado</h1>
+                <p class="error-code">Erro {{ code if code else '500' }}</p>
+                <p class="error-message">{{ message if message else 'Ocorreu um erro inesperado ao processar sua solicitação.' }}</p>
+
+                <div class="error-actions">
+                    <a href="/" class="btn-primary-error">
+                        <span class="material-symbols-outlined">home</span>
+                        Voltar ao Início
+                    </a>
+                    <a href="javascript:history.back()" class="btn-secondary-error">
+                        <span class="material-symbols-outlined">arrow_back</span>
+                        Voltar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-decoration">
+            <div class="deco-circle c1"></div>
+            <div class="deco-circle c2"></div>
+            <div class="deco-circle c3"></div>
+        </div>
+    </div>
+
+</body>
+</html>

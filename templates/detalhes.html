@@ -12,8 +12,8 @@
     <header>
         <div class="container header-content">
             <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
-                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: #2563eb;">rocket_launch</span>
-                <h1>Startups - MTI</h1>
+                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: var(--accent);">rocket_launch</span>
+                <h1 style="color: var(--primary);">Startup Radar</h1>
             </div>
             <nav class="main-nav">
                 <a href="/" class="btn-back" style="display: flex; align-items: center;">
@@ -39,10 +39,18 @@
                     {% endif %}
                 </div>
                 
-                <div style="margin-top: 15px;">
-                    <a href="/empresa/{{ empresa.id }}/editar" class="btn-edit-action" style="display: flex; align-items: center; width: fit-content;">
-                        <span class="material-symbols-outlined">edit</span> Gerenciar Mídias e Contato
+                <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="/empresa/{{ empresa.id }}/editar" class="btn-edit-action" style="display: flex; align-items: center; gap: 4px;">
+                        <span class="material-symbols-outlined">perm_media</span> Gerenciar Mídias
                     </a>
+                    <a href="/admin/editar-startup/{{ empresa.id }}" class="btn-edit-action" style="display: flex; align-items: center; gap: 4px; background-color: rgba(0, 61, 122, 0.1); color: var(--primary); border-color: var(--primary);">
+                        <span class="material-symbols-outlined">edit_note</span> Editar Dados Completos
+                    </a>
+                    <form action="/admin/deletar-startup/{{ empresa.id }}" method="post" style="display: inline;" onsubmit="return confirm('⚠️ ATENÇÃO: Deseja realmente EXCLUIR esta startup?\n\nEsta ação é PERMANENTE e não pode ser desfeita!\n\nTodos os dados serão perdidos.');">
+                        <button type="submit" class="btn-edit-action" style="background-color: #fee2e2; color: var(--danger); border-color: #fecaca; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                            <span class="material-symbols-outlined">delete</span> Excluir Startup
+                        </button>
+                    </form>
                 </div>
             </div>
             
@@ -59,21 +67,30 @@
             
             <div class="col-main">
                 <section class="detail-card">
-                    <h3><span class="material-symbols-outlined">lightbulb</span> A Solução</h3>
+                    <h3><span class="material-symbols-outlined" style="color: #f59e0b;">lightbulb</span> A Solução</h3>
                     <p class="text-content">{{ empresa.solucao }}</p>
                 </section>
 
                 <section class="detail-card">
-                    <h3><span class="material-symbols-outlined">payments</span> Modelo & Faturamento</h3>
+                    <h3><span class="material-symbols-outlined" style="color: var(--success);">payments</span> Modelo & Faturamento</h3>
                     <div class="info-list">
-                        <div class="info-item"><span class="label">Modelo:</span><span class="value">{{ empresa.modelo_de_negocio }}</span></div>
-                        <div class="info-item"><span class="label">Faturamento:</span><span class="value">{{ empresa.faturamento }}</span></div>
-                        <div class="info-item"><span class="label">Público Alvo:</span><span class="value">{{ empresa.publico_alvo }}</span></div>
+                        <div class="info-item">
+                            <span class="label">Modelo:</span>
+                            <span class="value">{{ empresa.modelo_de_negocio }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Faturamento:</span>
+                            <span class="value">{{ empresa.faturamento }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Público Alvo:</span>
+                            <span class="value">{{ empresa.publico_alvo }}</span>
+                        </div>
                     </div>
                 </section>
 
                 <section class="detail-card">
-                    <h3><span class="material-symbols-outlined">smart_display</span> Mídia</h3>
+                    <h3><span class="material-symbols-outlined" style="color: #8b5cf6;">smart_display</span> Mídia</h3>
                     <div class="media-links">
                         {% if empresa.link_apresentacao %}
                             <a href="{{ empresa.link_apresentacao }}" target="_blank" class="media-btn pdf" style="display:flex; align-items:center; justify-content:center;">
@@ -95,15 +112,24 @@
             </div>
 
             <div class="col-side">
-                <section class="detail-card highlight-card">
-                    <h3><span class="material-symbols-outlined">rocket</span> Momento</h3>
-                    <div class="stat-row"><span>Fase</span><strong>{{ empresa.fase_da_startup }}</strong></div>
-                    <div class="stat-row"><span>Colaboradores</span><strong>{{ empresa.colaboradores }}</strong></div>
-                    <div class="stat-row"><span>Investimento</span><strong>{{ empresa.recebeu_investimento }}</strong></div>
+                <section class="detail-card" style="border-left: 4px solid var(--accent);">
+                    <h3><span class="material-symbols-outlined" style="color: var(--accent);">rocket</span> Momento</h3>
+                    <div class="stat-row">
+                        <span>Fase</span>
+                        <strong>{{ empresa.fase_da_startup }}</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Colaboradores</span>
+                        <strong>{{ empresa.colaboradores }}</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Investimento</span>
+                        <strong>{{ empresa.recebeu_investimento }}</strong>
+                    </div>
                 </section>
 
                 <section class="detail-card">
-                    <h3><span class="material-symbols-outlined">contact_phone</span> Contatos</h3>
+                    <h3><span class="material-symbols-outlined" style="color: var(--primary);">contact_phone</span> Contatos</h3>
                     <ul class="contact-list">
                         {% if empresa.site and empresa.site != 'nan' %}
                         <li><a href="{{ empresa.site }}" target="_blank" style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important;">language</span> Site Oficial</a></li>

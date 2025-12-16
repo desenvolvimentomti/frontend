@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Negado - MTI</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+<body>
+
+    <div class="error-page-wrapper">
+        <div class="error-content">
+            <div class="error-icon-container">
+                <div class="error-icon-bg"></div>
+                <span class="material-symbols-outlined error-icon">block</span>
+            </div>
+
+            <div class="error-text">
+                <h1>Acesso Negado</h1>
+                <p class="error-code">Erro 403</p>
+                <p class="error-message">{{ message if message else 'Você não tem permissão para acessar esta página.' }}</p>
+
+                <div class="error-details">
+                    {% if required_role %}
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">admin_panel_settings</span>
+                        <span>Permissão necessária: <strong>{{ required_role }}</strong></span>
+                    </div>
+                    {% endif %}
+
+                    {% if user_role %}
+                    <div class="detail-item">
+                        <span class="material-symbols-outlined">person</span>
+                        <span>Seu nível: <strong>{{ user_role }}</strong></span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="error-actions">
+                    <a href="/" class="btn-primary-error">
+                        <span class="material-symbols-outlined">home</span>
+                        Voltar ao Início
+                    </a>
+                    <a href="/logout" class="btn-secondary-error">
+                        <span class="material-symbols-outlined">logout</span>
+                        Trocar de Conta
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="error-decoration">
+            <div class="deco-circle c1"></div>
+            <div class="deco-circle c2"></div>
+            <div class="deco-circle c3"></div>
+        </div>
+    </div>
+
+</body>
+</html>

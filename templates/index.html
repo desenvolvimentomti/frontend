@@ -13,19 +13,23 @@
     <header>
         <div class="container header-content">
             <div class="logo-area" style="display: flex; align-items: center; gap: 8px;">
-                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: #2563eb;">rocket_launch</span>
-                <h1>Startup Radar</h1>
+                <span class="material-symbols-outlined" style="font-size: 1.8rem !important; color: var(--accent);">rocket_launch</span>
+                <h1 style="color: var(--primary);">Startup Radar</h1>
             </div>
             
             <nav class="main-nav">
-                <a href="/" style="display: flex; align-items: center; font-weight: 700; color: #2563eb; background-color: #eff6ff; padding: 8px 12px; border-radius: 6px; text-decoration: none;">
+                <a href="/" class="active-link" style="display: flex; align-items: center; gap: 4px;">
                     <span class="material-symbols-outlined">search</span> Busca
                 </a>
-                
-                <a href="/lista" style="display: flex; align-items: center; color: #64748b; text-decoration: none; font-weight: 500; padding: 8px 12px;">
+
+                <a href="/lista" style="display: flex; align-items: center; gap: 4px; color: var(--text-light); text-decoration: none; font-weight: 500; padding: 8px 12px; transition: color 0.2s;">
                     <span class="material-symbols-outlined">table_rows</span> Lista Completa
                 </a>
-                
+
+                <a href="/admin/criar-startup" style="display: flex; align-items: center; gap: 4px; background-color: var(--accent); color: white; text-decoration: none; font-weight: 600; padding: 8px 16px; border-radius: 8px; transition: all 0.2s;">
+                    <span class="material-symbols-outlined">add_circle</span> Nova Startup
+                </a>
+
                 <span style="color: #cbd5e1; margin: 0 5px;">|</span>
                 
                 <a href="/logout" class="btn-logout" style="display: flex; align-items: center;">
@@ -37,19 +41,93 @@
     </header>
 
     <main class="container">
-        
+
+        {% if not query and not fase and stats %}
+        <div class="stats-grid">
+            <div class="stat-card primary">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">rocket_launch</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stats.total }}</div>
+                    <div class="stat-label">Total de Startups</div>
+                </div>
+            </div>
+
+            <div class="stat-card accent">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">category</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stats.setores }}</div>
+                    <div class="stat-label">Setores Diferentes</div>
+                </div>
+            </div>
+
+            <div class="stat-card success">
+                <div class="stat-icon">
+                    <span class="material-symbols-outlined">paid</span>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-value">{{ stats.com_investimento }}</div>
+                    <div class="stat-label">Com Investimento</div>
+                </div>
+            </div>
+
+            <div class="stat-card-small">
+                <div class="stat-mini-content">
+                    <span class="material-symbols-outlined">lightbulb</span>
+                    <div>
+                        <div class="stat-mini-value">{{ stats.ideacao }}</div>
+                        <div class="stat-mini-label">Ideação</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card-small">
+                <div class="stat-mini-content">
+                    <span class="material-symbols-outlined">settings</span>
+                    <div>
+                        <div class="stat-mini-value">{{ stats.operacao }}</div>
+                        <div class="stat-mini-label">Operação</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card-small">
+                <div class="stat-mini-content">
+                    <span class="material-symbols-outlined">trending_up</span>
+                    <div>
+                        <div class="stat-mini-value">{{ stats.tracao }}</div>
+                        <div class="stat-mini-label">Tração</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card-small">
+                <div class="stat-mini-content">
+                    <span class="material-symbols-outlined">workspace_premium</span>
+                    <div>
+                        <div class="stat-mini-value">{{ stats.escala }}</div>
+                        <div class="stat-mini-label">Escala</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
         <div class="{% if query or fase %}compact-header{% else %}hero-section{% endif %}">
-            
+
             {% if not query and not fase %}
             <div class="hero-text">
-                <h2>Encontre a startup certa</h2>
-                <p>Pesquise no nosso catálogo utilizando inteligência artificial.</p>
+                <h2>🚀 Encontre a Startup Certa</h2>
+                <p>Pesquise em nosso catálogo com inteligência artificial avançada e descubra as startups perfeitas para suas necessidades.</p>
             </div>
             {% endif %}
-            
+
             <div class="search-container">
                 <form action="/" method="get" class="search-form">
-                    
+
                     <div class="select-wrapper">
                         <span class="material-symbols-outlined select-icon">filter_list</span>
                         <select name="fase" class="search-select">
@@ -61,19 +139,19 @@
                         </select>
                     </div>
 
-                    <input 
-                        type="text" 
-                        name="q" 
-                        placeholder="Ex: fintechs de crédito, agrotech..." 
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Ex: fintechs de crédito, agrotech..."
                         value="{{ query if query else '' }}"
                         class="search-input"
                         {% if not query %}autofocus{% endif %}
                     >
-                    
+
                     <button type="submit" class="search-btn" style="display: flex; align-items: center; justify-content: center;">
                         <span class="material-symbols-outlined" style="margin: 0;">search</span>
                     </button>
-                    
+
                     {% if query or fase %}
                     <a href="/" class="btn-clear" title="Limpar busca">
                         <span class="material-symbols-outlined">close</span>
@@ -104,34 +182,35 @@
                     </div>
                     
                     <div class="card-body">
-                        <div class="info-row" style="display: flex; align-items: center;">
-                            <span class="material-symbols-outlined" style="font-size: 1rem !important; color: #94a3b8;">location_on</span>
-                            <strong>Local:</strong> <span style="margin-left: 5px;">{{ empresa.endereco }}</span>
+                        <div class="info-row">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem !important; color: var(--text-light);">location_on</span>
+                            <span>{{ empresa.endereco }}</span>
                         </div>
-                        <div class="info-row" style="display: flex; align-items: center;">
-                            <span class="material-symbols-outlined" style="font-size: 1rem !important; color: #94a3b8;">trending_up</span>
-                            <strong>Fase:</strong> <span style="margin-left: 5px;">{{ empresa.fase_da_startup }}</span>
+                        <div class="info-row">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem !important; color: var(--accent);">trending_up</span>
+                            <span><strong>{{ empresa.fase_da_startup }}</strong></span>
                         </div>
                         <div class="desc-box">
-                            <div style="display: flex; align-items: center; gap: 5px; color: #64748b; font-weight: 600; font-size: 0.85rem;">
-                                <span class="material-symbols-outlined" style="font-size: 1rem !important;">lightbulb</span> Solução:
+                            <div style="display: flex; align-items: center; gap: 6px; color: var(--text-light); font-weight: 600; font-size: 0.85rem; margin-bottom: 8px;">
+                                <span class="material-symbols-outlined" style="font-size: 1.1rem !important; color: #f59e0b;">lightbulb</span> Solução
                             </div>
-                            <p>{{ empresa.solucao[:110] }}...</p>
+                            <p>{{ empresa.solucao[:140] }}...</p>
                         </div>
                     </div>
 
                     <div class="card-footer">
-                        <a href="/empresa/{{ empresa.id }}" class="btn-details" style="display: flex; align-items: center; justify-content: center;">
-                            <span class="material-symbols-outlined">dashboard</span> Ver Dashboard
+                        <a href="/empresa/{{ empresa.id }}" class="btn-details" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                            <span class="material-symbols-outlined" style="font-size: 1.1rem !important;">dashboard</span>
+                            <span>Detalhes</span>
                         </a>
 
                         {% if empresa.site and empresa.site != 'nan' and empresa.site != 'None' %}
-                            <a href="{{ empresa.site }}" target="_blank" class="btn-visit" style="display: flex; align-items: center; justify-content: center;">
-                                <span class="material-symbols-outlined" style="margin: 0;">language</span>
+                            <a href="{{ empresa.site }}" target="_blank" class="btn-visit" style="display: flex; align-items: center; justify-content: center;" title="Visitar site">
+                                <span class="material-symbols-outlined" style="margin: 0; font-size: 1.2rem !important;">language</span>
                             </a>
                         {% else %}
-                            <button class="btn-disabled" disabled>
-                                <span class="material-symbols-outlined" style="margin: 0; font-size: 1rem !important;">block</span>
+                            <button class="btn-disabled" disabled title="Site não disponível">
+                                <span class="material-symbols-outlined" style="margin: 0; font-size: 1.1rem !important;">block</span>
                             </button>
                         {% endif %}
                     </div>

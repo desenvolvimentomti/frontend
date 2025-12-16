@@ -39,6 +39,7 @@
                     {% endif %}
                 </div>
                 
+                {% if user_role in ['admin', 'maintainer'] %}
                 <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
                     <a href="/empresa/{{ empresa.id }}/editar" class="btn-edit-action" style="display: flex; align-items: center; gap: 4px;">
                         <span class="material-symbols-outlined">perm_media</span> Gerenciar Mídias
@@ -46,19 +47,22 @@
                     <a href="/admin/editar-startup/{{ empresa.id }}" class="btn-edit-action" style="display: flex; align-items: center; gap: 4px; background-color: rgba(0, 61, 122, 0.1); color: var(--primary); border-color: var(--primary);">
                         <span class="material-symbols-outlined">edit_note</span> Editar Dados Completos
                     </a>
+                    {% if user_role == 'admin' %}
                     <form action="/admin/deletar-startup/{{ empresa.id }}" method="post" style="display: inline;" onsubmit="return confirm('⚠️ ATENÇÃO: Deseja realmente EXCLUIR esta startup?\n\nEsta ação é PERMANENTE e não pode ser desfeita!\n\nTodos os dados serão perdidos.');">
                         <button type="submit" class="btn-edit-action" style="background-color: #fee2e2; color: var(--danger); border-color: #fecaca; cursor: pointer; display: flex; align-items: center; gap: 4px;">
                             <span class="material-symbols-outlined">delete</span> Excluir Startup
                         </button>
                     </form>
+                    {% endif %}
                 </div>
+                {% endif %}
             </div>
             
             <div class="dh-meta">
                 <p><strong>Fundação:</strong> {{ empresa.ano_de_fundacao }}</p>
-                <p><strong>CNPJ:</strong> {{ empresa.cnpj }}</p>
+                <p><strong>CNPJ:</strong> {% if user_role == 'user' %}<span class="redacted-data">{{ empresa.cnpj }}</span>{% else %}{{ empresa.cnpj }}{% endif %}</p>
                 <p style="display: flex; align-items: center; justify-content: flex-end;">
-                    <span class="material-symbols-outlined" style="font-size: 1rem !important; color:#94a3b8;">location_on</span> {{ empresa.endereco }}
+                    <span class="material-symbols-outlined" style="font-size: 1rem !important; color:#94a3b8;">location_on</span> {% if user_role == 'user' %}<span class="redacted-data">{{ empresa.endereco }}</span>{% else %}{{ empresa.endereco }}{% endif %}
                 </p>
             </div>
         </div>
@@ -80,7 +84,7 @@
                         </div>
                         <div class="info-item">
                             <span class="label">Faturamento:</span>
-                            <span class="value">{{ empresa.faturamento }}</span>
+                            <span class="value">{% if user_role == 'user' %}<span class="redacted-data">{{ empresa.faturamento }}</span>{% else %}{{ empresa.faturamento }}{% endif %}</span>
                         </div>
                         <div class="info-item">
                             <span class="label">Público Alvo:</span>
@@ -140,11 +144,11 @@
                         {% endif %}
 
                         {% if empresa.email and empresa.email != 'nan' %}
-                        <li style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important; color:#94a3b8; margin-right:5px;">mail</span> {{ empresa.email }}</li>
+                        <li style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important; color:#94a3b8; margin-right:5px;">mail</span> {% if user_role == 'user' %}<span class="redacted-data">{{ empresa.email }}</span>{% else %}{{ empresa.email }}{% endif %}</li>
                         {% endif %}
 
                         {% if empresa.telefone_contato %}
-                        <li style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important; color:#94a3b8; margin-right:5px;">call</span> {{ empresa.telefone_contato }}</li>
+                        <li style="display:flex; align-items:center;"><span class="material-symbols-outlined" style="font-size:1rem!important; color:#94a3b8; margin-right:5px;">call</span> {% if user_role == 'user' %}<span class="redacted-data">{{ empresa.telefone_contato }}</span>{% else %}{{ empresa.telefone_contato }}{% endif %}</li>
                         {% endif %}
                     </ul>
                 </section>

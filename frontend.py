@@ -19,7 +19,7 @@ templates = Jinja2Templates(directory="templates")
 # 2. Pega a URL do arquivo .env (Se não achar, usa o localhost como padrão de segurança)
 BACKEND_URL = os.getenv("BACKEND_URL")
 
-# ========================================= =
+# ==========================================
 # HELPER FUNCTIONS
 # ==========================================
 
@@ -129,6 +129,7 @@ def dashboard(request: Request, q: Optional[str] = None, fase: Optional[str] = N
 
     empresas_exibidas = []
     error_msg = None
+    current_user = get_current_user(token)
 
     # Lógica para combinar Texto + Fase para a IA do Backend
     termo_busca = q
@@ -211,7 +212,8 @@ def dashboard(request: Request, q: Optional[str] = None, fase: Optional[str] = N
         "query": q,
         "fase": fase, # Passamos a fase para manter o select selecionado
         "error": error_msg,
-        "stats": stats
+        "stats": stats,
+        "user_role": current_user.get("role") if current_user else "user"
     })
 
 # 2. LISTA EM TABELA
@@ -223,11 +225,12 @@ def lista_tabela(request: Request):
 
     empresas_lista = []
     error_msg = None
+    current_user = get_current_user(token)
 
     try:
         headers = {"Authorization": token}
         response = requests.get(f"{BACKEND_URL}/companies", headers=headers, timeout=30)
-        
+
         if response.status_code == 200:
             empresas_lista = response.json()
             # Ordenação A-Z no Python
@@ -243,7 +246,8 @@ def lista_tabela(request: Request):
     return templates.TemplateResponse("tabela.html", {
         "request": request,
         "empresas": empresas_lista,
-        "error": error_msg
+        "error": error_msg,
+        "user_role": current_user.get("role") if current_user else "user"
     })
 
 # 3. DETALHES DA EMPRESA
@@ -255,19 +259,20 @@ def detalhes_empresa(request: Request, empresa_id: int):
 
     empresa_selecionada = None
     error_msg = None
+    current_user = get_current_user(token)
 
     try:
         headers = {"Authorization": token}
         # Busca lista e filtra (simulando get_by_id se a rota não existir)
         response = requests.get(f"{BACKEND_URL}/companies", headers=headers, timeout=30)
-        
+
         if response.status_code == 200:
             todos_dados = response.json()
             for emp in todos_dados:
                 if emp['id'] == empresa_id:
                     empresa_selecionada = emp
                     break
-            
+
             if not empresa_selecionada:
                 error_msg = "Empresa não encontrada."
         elif response.status_code == 401:
@@ -281,7 +286,8 @@ def detalhes_empresa(request: Request, empresa_id: int):
     return templates.TemplateResponse("detalhes.html", {
         "request": request,
         "empresa": empresa_selecionada,
-        "error": error_msg
+        "error": error_msg,
+        "user_role": current_user.get("role") if current_user else "user"
     })
 
 # ==========================================

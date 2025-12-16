@@ -1305,6 +1305,29 @@ tr:hover {
     }
 }
 
+/* Redacted data blur effect */
+.redacted-data {
+    filter: blur(6px);
+    user-select: none;
+    cursor: not-allowed;
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(90deg, rgba(0, 61, 122, 0.05) 0%, rgba(0, 61, 122, 0.1) 100%);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.redacted-data::after {
+    content: '🔒';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    filter: none;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
 /* UTILS */
 .alert-box { padding: 15px; margin-bottom: 20px; text-align: center; border-radius: 8px; background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 .empty-state {

@@ -26,9 +26,11 @@
                     <span class="material-symbols-outlined">table_rows</span> Lista Completa
                 </a>
 
+                {% if user_role in ['admin', 'maintainer'] %}
                 <a href="/admin/criar-startup" style="display: flex; align-items: center; gap: 4px; background-color: var(--accent); color: white; text-decoration: none; font-weight: 600; padding: 8px 16px; border-radius: 8px; transition: all 0.2s;">
                     <span class="material-symbols-outlined">add_circle</span> Nova Startup
                 </a>
+                {% endif %}
 
                 <span style="color: #cbd5e1; margin: 0 5px;">|</span>
                 
